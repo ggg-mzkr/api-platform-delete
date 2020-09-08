@@ -11,7 +11,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ApiResource(
  *     normalizationContext={"groups"={"user:read"}},
- *     denormalizationContext={"groups"={"user:write"}}
+ *     denormalizationContext={"groups"={"user:write"}},
  * )
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
@@ -37,9 +37,13 @@ class User implements UserInterface
     private $roles = [];
 
     /**
+     * @Groups({"user:write"})
+     */
+    private $plainPassword;
+
+    /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     * @Groups({"user:write"})
      */
     private $password;
 
@@ -85,6 +89,18 @@ class User implements UserInterface
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(?string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
 
         return $this;
     }
